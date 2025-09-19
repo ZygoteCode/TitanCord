@@ -1,7 +1,8 @@
-﻿using System.Net.Sockets;
+﻿using System.Drawing;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
-using System.Drawing;
 
 internal class TitanCordUtils
 {
@@ -61,16 +62,41 @@ internal class TitanCordUtils
         {
             ConnectCallback = async (ctx, ct) =>
             {
-                var socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                socket.NoDelay = true;
-                await socket.ConnectAsync(ctx.DnsEndPoint, ct);
+                Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp)
+                {
+                    NoDelay = true,
+                    DualMode = true,
+                };
+
+                await socket.ConnectAsync(ctx.DnsEndPoint, ct).ConfigureAwait(false);
                 return new NetworkStream(socket, ownsSocket: true);
-            }
+            },
+
+            UseProxy = false,
+            Proxy = null,
+            UseCookies = false,
+            AllowAutoRedirect = false,
+            AutomaticDecompression = DecompressionMethods.None,
+
+            ConnectTimeout = TimeSpan.FromMilliseconds(500),
+
+            PooledConnectionIdleTimeout = TimeSpan.FromMinutes(10),
+            PooledConnectionLifetime = Timeout.InfiniteTimeSpan,
+            MaxConnectionsPerServer = int.MaxValue,
+
+            EnableMultipleHttp2Connections = true
         };
 
-        HttpClient client = new HttpClient(handler, disposeHandler: true);
+        HttpClient client = new HttpClient(handler, disposeHandler: true)
+        {
+            Timeout = TimeSpan.FromSeconds(5),
+            DefaultRequestVersion = HttpVersion.Version30,
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+        };
+
         client.DefaultRequestHeaders.Add("Authorization", $"Bot {TitanCordGlobals.GetBotToken()}");
         client.DefaultRequestHeaders.Add("User-Agent", "TitanCordBot (https://github.com/yourbot, 1.0)");
+
         return client;
     }
 

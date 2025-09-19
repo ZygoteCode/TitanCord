@@ -6,7 +6,7 @@ public class Program
 
     public static void Main()
     {
-        Console.Title = "TitanCord | Made by https://github.com/ZygoteCode/";
+        Console.Title = "TitanCord V2 | Made by https://github.com/ZygoteCode/";
         Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
         TitanCordGlobals.SetBotToken(File.ReadAllText("token.txt"));
@@ -14,7 +14,7 @@ public class Program
 
         string guildId = "", message = "", channels = "", roles = "";
 
-        TitanCordUtils.Log("PRESENTATION", "TitanCord - Credits to https://github.com/ZygoteCode/");
+        TitanCordUtils.Log("PRESENTATION", "TitanCord V2 - Credits to https://github.com/ZygoteCode/");
         TitanCordUtils.Log("PRESENTATION", "Welcome to TitanCord! With this fantastic tool, made to be supported in 2025, you can nuke Discord servers using your created Bot!");
         TitanCordUtils.Log("PRESENTATION", "REMEMBER: you must put your Discord BOT Token in the file called \"token.txt\" in this folder to make the program working! If you have not done that, please, do that now and restart the application!");
         Console.WriteLine();
